@@ -1,13 +1,9 @@
 package appquanlykho.QuanLyGUI;
 
-import appquanlykho.Entity.KhoHang;
 import appquanlykho.DAO.LoaiSanPhamDAO;
-import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.DAO.SanPhamDAO;
 import appquanlykho.Entity.LoaiSanPham;
-import appquanlykho.Entity.NguoiDung;
 import appquanlykho.Entity.SanPham;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +17,7 @@ public class ThemSanPhamFrame extends JFrame {
     private JButton btnLuu, btnHuy;
 
     public ThemSanPhamFrame() {
-        setTitle("Thêm người dùng");
+        setTitle("Thêm sản phẩm");
         setSize(400, 350);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
