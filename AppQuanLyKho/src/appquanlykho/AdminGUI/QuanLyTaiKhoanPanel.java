@@ -1,4 +1,3 @@
-
 package appquanlykho.AdminGUI;
 
 import appquanlykho.Components.MyTable;
@@ -20,21 +19,25 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author HP
  */
-
 public class QuanLyTaiKhoanPanel extends JPanel {
 
     private TopPanelQLTK topPanel;
     private MyTable table;
-
 
     public QuanLyTaiKhoanPanel() throws SQLException, ClassNotFoundException, Exception {
         this.setLayout(new BorderLayout());
         initUI();
     }
 
-    private void initUI() throws SQLException, ClassNotFoundException, Exception {
-        // Panel Menu
-        topPanel = new TopPanelQLTK();
+    private void initUI() {
+        try {
+            // Panel Menu
+            topPanel = new TopPanelQLTK();
+        } catch (SQLException ex) {
+            Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // main
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -48,42 +51,57 @@ public class QuanLyTaiKhoanPanel extends JPanel {
 
         this.add(mainPanel, BorderLayout.CENTER);
 
-//        topPanel.getaddButton().addActionListener(e -> {
-//            try {
-//                ThemGoiHang();
-//            } catch (SQLException ex) {
-//                Logger.getLogger(QuanLyDonHangPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (ClassNotFoundException ex) {
-//                Logger.getLogger(QuanLyDonHangPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (Exception ex) {
-//                Logger.getLogger(QuanLyDonHangPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        });
+        topPanel.getaddButton().addActionListener(e
+                -> new ThemNguoiDungFrame().setVisible(true));
 
-        topPanel.getfilterButton().addActionListener(e->{
+        topPanel.getfilterButton().addActionListener(e -> {
             try {
                 XuLyTraCuu();
             } catch (Exception ex) {
                 Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-
         
+        topPanel.getupdateButton().addActionListener(e->HienThiFrameSuaNguoiDung());
+        
+        topPanel.getDeleteButton().addActionListener(e->{
+            try {
+                XuLyXoa();
+            } catch (Exception ex) {
+                Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 
-        HienThiDSNguoiDung();
+        topPanel.getRefreshButton().addActionListener(e -> {
+            try {
+                HienThiDSNguoiDung();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        try {
+            HienThiDSNguoiDung();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    void XuLyTraCuu() throws ClassNotFoundException, Exception{
+
+    public void XuLyTraCuu() throws ClassNotFoundException, Exception {
         NguoiDung nguoiDung = topPanel.getNguoiDung();
         HienThiDSNguoiDung(nguoiDung);
     }
 
-    void HienThiDSNguoiDung() throws SQLException, ClassNotFoundException, Exception {
-        
+    public void HienThiDSNguoiDung() throws SQLException, ClassNotFoundException, Exception {
+
         HienThiDSNguoiDung(new NguoiDung());
     }
 
-    void HienThiDSNguoiDung(NguoiDung nguoiDung) throws SQLException, ClassNotFoundException, Exception {
+    public void HienThiDSNguoiDung(NguoiDung nguoiDung) throws SQLException, ClassNotFoundException, Exception {
         java.util.List<NguoiDung> dsNguoiDung = NguoiDungDAO.LayDSNguoiDung(nguoiDung);
         String[] columns = NguoiDung.getTableHeaders();
         Object[][] data = new Object[dsNguoiDung.size()][columns.length];
@@ -94,36 +112,36 @@ public class QuanLyTaiKhoanPanel extends JPanel {
 
         table.setTableData(data);
     }
-//
-//    public void ThemGoiHang() throws SQLException, ClassNotFoundException {
-//        ThemGoiHangFrame themGoiHang = new ThemGoiHangFrame(() -> {
-//            try {
-//                HienThiDSGoiHangTheoKho();
-//            } catch (SQLException ex) {
-//                Logger.getLogger(QuanLyGoiHangPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            } catch (ClassNotFoundException ex) {
-//                Logger.getLogger(QuanLyGoiHangPanel.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }, nhanVienKho);
-//        themGoiHang.setVisible(true);
-//    }
+    
+    public void HienThiFrameSuaNguoiDung(){
+        for (int i = 0; i < table.getRowCount(); i++) {
+            Boolean isChecked = (Boolean) table.getValueAt(i, 0); // Cột 0 là checkbox
+            if (Boolean.TRUE.equals(isChecked)) {
+                // Lấy thông tin dòng được chọn
+                Integer idNguoiDung = (Integer) table.getValueAt(i, 1); // cột 1: mã ĐH
+
+                // Gọi hàm xử lý
+                new SuaNguoiDungFrame(idNguoiDung).setVisible(true);
+            }
+        }
+    }
+
+    public void XuLyXoa() throws SQLException, ClassNotFoundException, Exception{
+        for (int i = 0; i < table.getRowCount(); i++) {
+            Boolean isChecked = (Boolean) table.getValueAt(i, 0); // Cột 0 là checkbox
+            if (Boolean.TRUE.equals(isChecked)) {
+                // Lấy thông tin dòng được chọn
+                Integer idNguoiDung = (Integer) table.getValueAt(i, 1); // cột 1: mã ĐH
+
+                // Gọi hàm xử lý
+                NguoiDungDAO.XoaNguoiDung(idNguoiDung);
+                JOptionPane.showMessageDialog(this, "Xác nhận xóa người dùng thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                HienThiDSNguoiDung();
+            }
+        }
+    }
 //    
-//    public void XuLyHoanThanhGoiHang() throws SQLException, ClassNotFoundException{
-//        for (int i = 0; i < listOrder.getRowCount(); i++) {
-//            Boolean isChecked = (Boolean) listOrder.getValueAt(i, 0); // Cột 0 là checkbox
-//            if (Boolean.TRUE.equals(isChecked)) {
-//                // Lấy thông tin dòng được chọn
-//                Integer maGoiHang = (Integer) listOrder.getValueAt(i, 1); // cột 1: mã ĐH
-//                System.out.println(maGoiHang);
-//
-//                // Gọi hàm xử lý
-//                controller.HoanThanhGoiHang(maGoiHang);
-//                JOptionPane.showMessageDialog(this, "Xác nhận gói hàng thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-//                HienThiDSGoiHangTheoKho();
-//            }
-//        }
-//    }
-//    
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
@@ -132,7 +150,7 @@ public class QuanLyTaiKhoanPanel extends JPanel {
         }
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Quản Lý Gói Hàng");
-            
+
             try {
                 frame.setContentPane(new QuanLyTaiKhoanPanel());
             } catch (ClassNotFoundException ex) {
@@ -140,7 +158,7 @@ public class QuanLyTaiKhoanPanel extends JPanel {
             } catch (Exception ex) {
                 Logger.getLogger(QuanLyTaiKhoanPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             frame.setSize(1300, 600);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -12,7 +12,7 @@ public class NguoiDungDAO {
 
     public static List<NguoiDung> LayDSNguoiDung(NguoiDung nd) throws Exception {
         List<NguoiDung> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM NguoiDung WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT * FROM NguoiDung WHERE TrangThaiXoa = 0 ");
         List<Object> params = new ArrayList<>();
 
         if (nd.getIdNguoiDung() != null) {
@@ -63,11 +63,11 @@ public class NguoiDungDAO {
     }
 
     public static NguoiDung LayThongTinNguoiDung(NguoiDung nd) throws Exception {
-        StringBuilder sql = new StringBuilder("SELECT * FROM NguoiDung WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT * FROM NguoiDung WHERE TrangThaiXoa=0 ");
         List<Object> params = new ArrayList<>();
 
-        if (nd.getIdNguoiDung() == null ){}
-        else{
+        if (nd.getIdNguoiDung() == null) {
+        } else {
             sql.append(" AND ID_NguoiDung = ?");
             params.add(nd.getIdNguoiDung());
         }
@@ -118,4 +118,101 @@ public class NguoiDungDAO {
 
         return null;
     }
+
+    public static void ThemNguoiDung(NguoiDung nguoiDung) throws Exception {
+        String sql = "INSERT INTO NguoiDung (ID_NguoiDung, TenDangNhap, MatKhau, HoTen, TrangThaiXoa, VaiTro, ID_KhoHang) "
+                + "VALUES (SEQ_NGUOIDUNG.NEXTVAL, ?, ?, ?, NULL, ?, ?)";
+
+        Connection conn = ConnectionUtils.getMyConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        stmt.setString(1, nguoiDung.getTenDangNhap());
+        stmt.setString(2, nguoiDung.getMatKhau());
+        stmt.setString(3, nguoiDung.getHoTen());
+        stmt.setString(4, nguoiDung.getVaiTro());
+
+        if (nguoiDung.getIdKhoHang() != null) {
+            stmt.setInt(5, nguoiDung.getIdKhoHang());
+        } else {
+            stmt.setNull(5, java.sql.Types.INTEGER);
+        }
+
+        stmt.executeUpdate();
+        stmt.close();
+        conn.close();
+    }
+
+    public static void SuaNguoiDung(NguoiDung nguoiDung) throws Exception {
+        if (nguoiDung.getIdNguoiDung() == null) {
+            throw new IllegalArgumentException("ID người dùng không được null.");
+        }
+
+        StringBuilder sql = new StringBuilder("UPDATE NguoiDung SET ");
+        List<Object> params = new ArrayList<>();
+        List<String> fields = new ArrayList<>();
+
+        if (nguoiDung.getTenDangNhap() != null) {
+            fields.add("TenDangNhap = ?");
+            params.add(nguoiDung.getTenDangNhap());
+        }
+
+        if (nguoiDung.getMatKhau() != null) {
+            fields.add("MatKhau = ?");
+            params.add(nguoiDung.getMatKhau());
+        }
+
+        if (nguoiDung.getHoTen() != null) {
+            fields.add("HoTen = ?");
+            params.add(nguoiDung.getHoTen());
+        }
+
+        if (nguoiDung.getVaiTro() != null) {
+            fields.add("VaiTro = ?");
+            params.add(nguoiDung.getVaiTro());
+        }
+
+        if (nguoiDung.getIdKhoHang() != null) {
+            fields.add("ID_KhoHang = ?");
+            params.add(nguoiDung.getIdKhoHang());
+        }
+
+        if (fields.isEmpty()) {
+            throw new IllegalArgumentException("Không có dữ liệu nào để cập nhật.");
+        }
+
+        sql.append(String.join(", ", fields));
+        sql.append(" WHERE ID_NguoiDung = ?");
+        params.add(nguoiDung.getIdNguoiDung());
+
+        Connection conn = ConnectionUtils.getMyConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql.toString());
+        
+
+        for (int i = 0; i < params.size(); i++) {
+            stmt.setObject(i + 1, params.get(i));
+        }
+
+        int affected = stmt.executeUpdate();
+        if (affected == 0) {
+            throw new Exception("Không tìm thấy người dùng để cập nhật.");
+        }
+
+    }
+
+    public static void XoaNguoiDung(Integer idNguoiDung) throws Exception {
+        if (idNguoiDung == null) {
+            return;
+        }
+
+        String sql = "UPDATE NguoiDung SET TrangThaiXoa = 1 WHERE ID_NguoiDung = ?";
+
+        Connection conn = ConnectionUtils.getMyConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, idNguoiDung);
+
+        stmt.executeUpdate();
+        stmt.close();
+        conn.close();
+    }
+
 }

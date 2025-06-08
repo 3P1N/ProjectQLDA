@@ -47,4 +47,8 @@ public class KhoHang {
     public void setSoLuongTonKho(Integer soLuongTonKho) {
         this.soLuongTonKho = soLuongTonKho;
     }
+    @Override
+    public String toString() {
+        return this.getTenKhoHang(); 
+    }
 }
