@@ -126,4 +126,60 @@ public class PhieuNhapXuatDAO {
         return list;
     }
 
+    public static void SuaPhieuNhapXuat(PhieuNhapXuat pnx) throws SQLException, ClassNotFoundException {
+        if (pnx == null || pnx.getIdPhieuNhapXuat() == null) {
+            throw new IllegalArgumentException("ID_PhieuNhapXuat không hợp lệ");
+        }
+
+        StringBuilder sql = new StringBuilder("UPDATE PhieuNhapXuat SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (pnx.getIdNguoiDung() != null) {
+            sql.append("ID_NguoiDung = ?, ");
+            params.add(pnx.getIdNguoiDung());
+        }
+        if (pnx.getNgayTao() != null) {
+            sql.append("NgayTao = ?, ");
+            params.add(pnx.getNgayTao());
+        }
+        if (pnx.getTrangThai() != null) {
+            sql.append("TrangThai = ?, ");
+            params.add(pnx.getTrangThai());
+        }
+        if (pnx.getLoaiPhieu() != null) {
+            sql.append("LoaiPhieu = ?, ");
+            params.add(pnx.getLoaiPhieu());
+        }
+
+        // Xoá dấu phẩy cuối cùng nếu có
+        if (params.isEmpty()) {
+            throw new IllegalArgumentException("Không có trường nào để cập nhật");
+        }
+
+        sql.setLength(sql.length() - 2); // xóa dấu ", "
+        sql.append(" WHERE ID_PhieuNhapXuat = ?");
+        params.add(pnx.getIdPhieuNhapXuat());
+
+        // Thực thi câu lệnh
+        Connection conn = ConnectionUtils.getMyConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql.toString());
+
+        for (int i = 0; i < params.size(); i++) {
+            Object param = params.get(i);
+            if (param instanceof Integer) {
+                stmt.setInt(i + 1, (Integer) param);
+            } else if (param instanceof java.sql.Date) {
+                stmt.setDate(i + 1, (java.sql.Date) param);
+            } else if (param instanceof String) {
+                stmt.setString(i + 1, (String) param);
+            } else {
+                stmt.setObject(i + 1, param);
+            }
+        }
+
+        stmt.executeUpdate();
+        stmt.close();
+        conn.close();
+    }
+
 }

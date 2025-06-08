@@ -1,10 +1,7 @@
 
 package appquanlykho.QuanLyGUI;
 
-import appquanlykho.AdminGUI.SuaNguoiDungFrame;
-import appquanlykho.AdminGUI.ThemNguoiDungFrame;
 import appquanlykho.Components.MyTable;
-import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.DAO.SanPhamDAO;
 import appquanlykho.Entity.NguoiDung;
 import appquanlykho.Entity.SanPham;
@@ -14,7 +11,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -71,13 +67,7 @@ public class QuanLySanPhamPanel extends JPanel {
 
         topPanel.getupdateButton().addActionListener(e -> HienThiFrameSuaSanPham());
 
-        topPanel.getDeleteButton().addActionListener(e -> {
-            try {
-                XuLyXoa();
-            } catch (Exception ex) {
-                Logger.getLogger(QuanLySanPhamPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+      
 
         topPanel.getRefreshButton().addActionListener(e -> {
             try {
@@ -131,23 +121,7 @@ public class QuanLySanPhamPanel extends JPanel {
                 new SuaSanPhamFrame(idSanPham).setVisible(true);
             }
         }
-    }
-
-    public void XuLyXoa() throws SQLException, ClassNotFoundException, Exception {
-        for (int i = 0; i < table.getRowCount(); i++) {
-            Boolean isChecked = (Boolean) table.getValueAt(i, 0); // Cột 0 là checkbox
-            if (Boolean.TRUE.equals(isChecked)) {
-                // Lấy thông tin dòng được chọn
-                Integer idNguoiDung = (Integer) table.getValueAt(i, 1); // cột 1: mã ĐH
-
-                // Gọi hàm xử lý
-                NguoiDungDAO.XoaNguoiDung(idNguoiDung);
-                JOptionPane.showMessageDialog(this, "Xác nhận xóa người dùng thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                HienThiDSSanPham();
-            }
-        }
-    }
-//    
+    } 
 
     public static void main(String[] args) {
         try {
