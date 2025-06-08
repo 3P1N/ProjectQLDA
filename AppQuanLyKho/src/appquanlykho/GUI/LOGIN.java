@@ -1,5 +1,6 @@
 package appquanlykho.GUI;
 
+import appquanlykho.AdminGUI.AdminGUI;
 import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.Entity.NguoiDung;
 import com.formdev.flatlaf.FlatLightLaf;

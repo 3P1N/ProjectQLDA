@@ -18,8 +18,8 @@ import javax.swing.SwingUtilities;
  */
 public class AdminSidebar extends Sidebar {
 
-    private static final List<String> items = Arrays.asList("Trang chủ", "Quản lý tài khoản", "Thông tin cá nhân", "Đăng xuất");
-    private static final List<String> icons = Arrays.asList("home.png", "customer.png", "customer.png", "logout.png");
+    private static final List<String> items = Arrays.asList("Quản lý tài khoản", "Đăng xuất");
+    private static final List<String> icons = Arrays.asList("customer.png", "logout.png");
 
     public AdminSidebar(NguoiDung nguoiDung) throws SQLException, ClassNotFoundException {
         super(items, icons, nguoiDung);
