@@ -2,6 +2,7 @@ package appquanlykho.Components;
 
 
 import appquanlykho.Entity.NguoiDung;
+import appquanlykho.Entity.SanPham;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -67,7 +68,7 @@ public class MyTable extends JPanel {
     }
 
    
-    public void setTableDataNguoiDung(List<NguoiDung> dsNguoiDung) throws SQLException, ClassNotFoundException {
+    public void setTableDataNguoiDung(List<NguoiDung> dsNguoiDung) throws SQLException, ClassNotFoundException, Exception {
         model.setRowCount(0); 
         
         String[] columns = NguoiDung.getTableHeaders();
@@ -79,17 +80,17 @@ public class MyTable extends JPanel {
         setTableData(data);
     }
     
-//    public void setTableDataGoiHang(List<GoiHang> dsGoiHang) throws SQLException, ClassNotFoundException{
-//        model.setRowCount(0);
-//        String[] columns = GoiHang.getTableHeaders();
-//        Object[][] data = new Object[dsGoiHang.size()][columns.length];
-//
-//        for (int i = 0; i < dsGoiHang.size(); i++) {
-//            data[i] = dsGoiHang.get(i).toTableRow();
-//        }
-//        setTableData(data);
-//        
-//    }
+    public void setTableDataSanPham(List<SanPham> dsSanPham) throws SQLException, ClassNotFoundException, Exception{
+        model.setRowCount(0);
+        String[] columns = SanPham.getTableHeaders();
+        Object[][] data = new Object[dsSanPham.size()][columns.length];
+
+        for (int i = 0; i < dsSanPham.size(); i++) {
+            data[i] = dsSanPham.get(i).toTableRow();
+        }
+        setTableData(data);
+        
+    }
     
     public void setTableData(Object[][] newData) {
         model.setRowCount(0); 

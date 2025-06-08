@@ -34,6 +34,7 @@ public class NguoiDungDAO {
             sql.append(" AND ID_KhoHang = ?");
             params.add(nd.getIdKhoHang());
         }
+        sql.append("ORDER BY ID_NguoiDung DESC");
 
         Connection conn = ConnectionUtils.getMyConnection();
         PreparedStatement stmt = conn.prepareStatement(sql.toString());
