@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MyTable extends JPanel {
 
-    private final JTable table;
+    public final JTable table;
     private DefaultTableModel model;
 
     public MyTable(String[] columnNames, Object[][] data) {

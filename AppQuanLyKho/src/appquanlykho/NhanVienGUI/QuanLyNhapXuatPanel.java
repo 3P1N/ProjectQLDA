@@ -1,4 +1,3 @@
-
 package appquanlykho.NhanVienGUI;
 
 import appquanlykho.Components.MyTable;
@@ -6,9 +5,7 @@ import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.DAO.PhieuNhapXuatDAO;
 import appquanlykho.Entity.NguoiDung;
 import appquanlykho.Entity.PhieuNhapXuat;
-import appquanlykho.Entity.SanPham;
-import appquanlykho.QuanLyGUI.SuaSanPhamFrame;
-import appquanlykho.QuanLyGUI.ThemSanPhamFrame;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.BorderLayout;
 import java.sql.SQLException;
@@ -29,7 +26,7 @@ public class QuanLyNhapXuatPanel extends JPanel {
     private TopPanelQLNX topPanel;
     private MyTable table;
     private NguoiDung nguoiDung;
-    
+
     public QuanLyNhapXuatPanel(NguoiDung nguoiDung) throws SQLException, ClassNotFoundException, Exception {
         this.nguoiDung = nguoiDung;
         this.setLayout(new BorderLayout());
@@ -71,7 +68,6 @@ public class QuanLyNhapXuatPanel extends JPanel {
             }
         });
 
-
         topPanel.getRefreshButton().addActionListener(e -> {
             try {
                 HienThiDSPhieuNhapXuat();
@@ -102,6 +98,12 @@ public class QuanLyNhapXuatPanel extends JPanel {
     }
 
     public void HienThiDSPhieuNhapXuat(PhieuNhapXuat phieuNhapXuat) throws SQLException, ClassNotFoundException, Exception {
+        if (nguoiDung.getVaiTro().equals("Nhân viên nhập")) {
+            phieuNhapXuat.setLoaiPhieu("Nhap");
+        } else {
+            phieuNhapXuat.setLoaiPhieu("Xuat");
+
+        }
         java.util.List<PhieuNhapXuat> dsPhieuNhapXuat = PhieuNhapXuatDAO.LayDSPhieuNhapXuat(phieuNhapXuat);
         String[] columns = NguoiDung.getTableHeaders();
         Object[][] data = new Object[dsPhieuNhapXuat.size()][columns.length];
@@ -113,10 +115,7 @@ public class QuanLyNhapXuatPanel extends JPanel {
         table.setTableData(data);
     }
 
-
-
 //    
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());

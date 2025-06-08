@@ -3,6 +3,7 @@ package appquanlykho.GUI;
 import appquanlykho.AdminGUI.AdminGUI;
 import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.Entity.NguoiDung;
+import appquanlykho.NhanVienGUI.NhanVienGUI;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
@@ -101,8 +102,13 @@ public class LOGIN extends JFrame {
             JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
         } else {
-            if(nguoiDung.getVaiTro().equals("Admin")){
+            if (nguoiDung.getVaiTro().equals("Admin")) {
                 new AdminGUI(nguoiDung).setVisible(true);
+            } else if (nguoiDung.getVaiTro().equals("Quản lý")) {
+
+            } else {
+                new NhanVienGUI(nguoiDung).setVisible(true);
+
             }
             this.dispose();
         }

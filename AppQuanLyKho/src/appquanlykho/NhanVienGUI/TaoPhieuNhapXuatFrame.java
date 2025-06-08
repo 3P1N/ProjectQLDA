@@ -128,7 +128,7 @@ public class TaoPhieuNhapXuatFrame extends JFrame {
         }
     }
 
-    public void HienThiCTNX() throws ClassNotFoundException, Exception {
+    public void HienThiCTNX() throws Exception {
 
         String[] columns = NguoiDung.getTableHeaders();
         Object[][] data = new Object[listCTNX.size()][columns.length];

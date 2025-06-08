@@ -6,8 +6,8 @@ import java.awt.*;
 
 public class TableList extends JPanel {
 
-    private final JTable table;
-    private DefaultTableModel model;
+    public final JTable table;
+    public DefaultTableModel model;
 
     public TableList(String[] columnNames, Object[][] data) {
         setLayout(new BorderLayout());
