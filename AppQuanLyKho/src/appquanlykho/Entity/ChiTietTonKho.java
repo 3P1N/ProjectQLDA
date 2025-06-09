@@ -1,5 +1,7 @@
 package appquanlykho.Entity;
 
+import appquanlykho.DAO.SanPhamDAO;
+
 public class ChiTietTonKho {
     private Integer idKhoHang;
     private Integer idSanPham;
@@ -14,6 +16,18 @@ public class ChiTietTonKho {
         this.soLuong = soLuong;
     }
 
+    public static String[] getTableHeaders() {
+        return new String[]{" ", "ID Kho","ID Sản phẩm", "Tên sản phẩm", "Số lượng"};
+    }
+
+    public Object[] toTableRow() throws ClassNotFoundException, Exception {
+        SanPham sp = new SanPham();
+        sp.setIdLoaiSanPham(idSanPham);
+        sp = SanPhamDAO.LayThongTinSanPham(sp);
+        
+        return new Object[]{"", idKhoHang, idSanPham,
+             sp.getTenSanPham(), soLuong};
+    }
     public Integer getIdKhoHang() {
         return idKhoHang;
     }

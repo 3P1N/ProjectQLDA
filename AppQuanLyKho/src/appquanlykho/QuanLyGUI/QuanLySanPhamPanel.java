@@ -100,7 +100,7 @@ public class QuanLySanPhamPanel extends JPanel {
 
     public void HienThiDSSanPham(SanPham sanPham) throws SQLException, ClassNotFoundException, Exception {
         java.util.List<SanPham> dsSanPham = SanPhamDAO.LayDSSanPham(sanPham);
-        String[] columns = NguoiDung.getTableHeaders();
+        String[] columns = SanPham.getTableHeaders();
         Object[][] data = new Object[dsSanPham.size()][columns.length];
 
         for (int i = 0; i < dsSanPham.size(); i++) {

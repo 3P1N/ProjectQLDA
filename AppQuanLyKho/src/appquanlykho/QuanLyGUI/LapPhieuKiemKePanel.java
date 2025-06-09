@@ -28,10 +28,7 @@ import java.util.logging.Logger;
 
 public class LapPhieuKiemKePanel extends JPanel {
 
-    private JTable tblKiemKe;
     private MyTable myTable;
-
-    private DefaultTableModel tblModel;
     private JButton btnThemSanPham, btnLuuPhieu;
     private JLabel lblNgayTao;
 

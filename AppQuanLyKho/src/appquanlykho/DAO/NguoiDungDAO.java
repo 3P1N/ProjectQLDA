@@ -121,8 +121,8 @@ public class NguoiDungDAO {
     }
 
     public static void ThemNguoiDung(NguoiDung nguoiDung) throws Exception {
-        String sql = "INSERT INTO NguoiDung (ID_NguoiDung, TenDangNhap, MatKhau, HoTen, TrangThaiXoa, VaiTro, ID_KhoHang) "
-                + "VALUES (SEQ_NGUOIDUNG.NEXTVAL, ?, ?, ?, NULL, ?, ?)";
+        String sql = "INSERT INTO NguoiDung (ID_NguoiDung, TenDangNhap, MatKhau, HoTen, VaiTro, ID_KhoHang) "
+                + "VALUES (SEQ_NGUOIDUNG.NEXTVAL, ?, ?, ?, ?, ?)";
 
         Connection conn = ConnectionUtils.getMyConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);

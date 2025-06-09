@@ -4,6 +4,7 @@ import appquanlykho.AdminGUI.AdminGUI;
 import appquanlykho.DAO.NguoiDungDAO;
 import appquanlykho.Entity.NguoiDung;
 import appquanlykho.NhanVienGUI.NhanVienGUI;
+import appquanlykho.QuanLyGUI.QuanLyGUI;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
@@ -105,7 +106,7 @@ public class LOGIN extends JFrame {
             if (nguoiDung.getVaiTro().equals("Admin")) {
                 new AdminGUI(nguoiDung).setVisible(true);
             } else if (nguoiDung.getVaiTro().equals("Quản lý")) {
-
+                new QuanLyGUI(nguoiDung).setVisible(true);
             } else {
                 new NhanVienGUI(nguoiDung).setVisible(true);
 
