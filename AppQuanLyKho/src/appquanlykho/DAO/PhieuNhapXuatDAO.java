@@ -181,5 +181,30 @@ public class PhieuNhapXuatDAO {
         stmt.close();
         conn.close();
     }
+    
+     public static PhieuNhapXuat LayThongTinPhieuNhapXuat(PhieuNhapXuat pnx) throws SQLException, ClassNotFoundException {
+        if (pnx == null || pnx.getIdPhieuNhapXuat() == null) {
+            return null;
+        }
 
+        String sql = "SELECT ID_PhieuNhapXuat, ID_NguoiDung, LoaiPhieu, NgayTao FROM PhieuNhapXuat WHERE ID_PhieuNhapXuat = ?";
+        try (Connection conn = ConnectionUtils.getMyConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, pnx.getIdPhieuNhapXuat());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    PhieuNhapXuat result = new PhieuNhapXuat();
+                    result.setIdPhieuNhapXuat(rs.getInt("ID_PhieuNhapXuat"));
+                    result.setIdNguoiDung(rs.getInt("ID_NguoiDung"));
+                    result.setLoaiPhieu(rs.getString("LoaiPhieu"));
+                    result.setNgayTao(rs.getDate("NgayTao"));
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
 }

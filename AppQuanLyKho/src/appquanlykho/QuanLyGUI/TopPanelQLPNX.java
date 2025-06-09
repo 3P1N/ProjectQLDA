@@ -18,6 +18,7 @@ public class TopPanelQLPNX extends JPanel {
     private JButton duyetButton = new JButton("Duyệt");
     private JButton filterButton = new JButton("Lọc");
     private JButton huyButton = new JButton("Hủy");
+    private JButton xemButton = new JButton("Xem chi tiết");
     private JButton refreshButton = new JButton("Refresh");
 
     private final JTextField idField = new JTextField("");
@@ -63,6 +64,11 @@ public class TopPanelQLPNX extends JPanel {
         huyButton.setBackground(new Color(0, 153, 76));
         huyButton.setForeground(Color.WHITE);
         add(huyButton);
+        
+        xemButton.setPreferredSize(new Dimension(100, 30));
+        xemButton.setBackground(new Color(0, 153, 76));
+        xemButton.setForeground(Color.WHITE);
+        add(xemButton);
 
         refreshButton.setPreferredSize(new Dimension(150, 30));
         refreshButton.setBackground(new Color(0, 136, 153));
@@ -81,6 +87,10 @@ public class TopPanelQLPNX extends JPanel {
 
     public JButton getHuyButton() {
         return this.huyButton;
+    }
+    
+    public JButton getXemButton() {
+        return this.xemButton;
     }
 
     public JButton getfilterButton() {

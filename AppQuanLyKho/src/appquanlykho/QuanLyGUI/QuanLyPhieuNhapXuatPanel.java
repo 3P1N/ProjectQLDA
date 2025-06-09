@@ -86,6 +86,8 @@ public class QuanLyPhieuNhapXuatPanel extends JPanel {
                 Logger.getLogger(QuanLyPhieuNhapXuatPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        topPanel.getXemButton().addActionListener(e->XemChiTiet());
 
         
 
@@ -131,6 +133,32 @@ public class QuanLyPhieuNhapXuatPanel extends JPanel {
         table.setTableData(data);
     }
 
+    public void XemChiTiet(){
+       
+        
+        for (int i = 0; i < table.getRowCount(); i++) {
+            Boolean isChecked = (Boolean) table.getValueAt(i, 0); // Cột 0 là checkbox
+            if (Boolean.TRUE.equals(isChecked)) {
+                // Lấy thông tin dòng được chọn
+                Integer idPhieuNhapXuat = (Integer) table.getValueAt(i, 1); // cột 1: mã ĐH
+                
+                PhieuNhapXuat pnx = new PhieuNhapXuat();
+                pnx.setIdPhieuNhapXuat(idPhieuNhapXuat);
+                try {
+                    pnx = PhieuNhapXuatDAO.LayThongTinPhieuNhapXuat(pnx);
+                    // Gọi hàm xử lý
+                } catch (SQLException ex) {
+                    Logger.getLogger(QuanLyPhieuNhapXuatPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(QuanLyPhieuNhapXuatPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                new ChiTietPhieuNhapXuatFrame(pnx).setVisible(true);
+                
+            }
+        }
+    
+    }
    
 
     public void XuLyPhieu(String trangThai) throws SQLException, ClassNotFoundException, Exception {

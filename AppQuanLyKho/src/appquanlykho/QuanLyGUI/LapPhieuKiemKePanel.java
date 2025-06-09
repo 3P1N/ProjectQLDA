@@ -1,10 +1,15 @@
 package appquanlykho.QuanLyGUI;
 
 import appquanlykho.Components.MyTable;
+import appquanlykho.DAO.ChiTietTonKhoDAO;
+import appquanlykho.DAO.NguoiDungDAO;
+import appquanlykho.DAO.PhieuKiemKeDAO;
 
 import appquanlykho.DAO.SanPhamDAO;
 import appquanlykho.Entity.ChiTietKiemKe;
+import appquanlykho.Entity.ChiTietTonKho;
 import appquanlykho.Entity.NguoiDung;
+import appquanlykho.Entity.PhieuKiemKe;
 import appquanlykho.Entity.SanPham;
 import appquanlykho.NhanVienGUI.QuanLyNhapXuatPanel;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -13,8 +18,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Vector;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -32,8 +38,13 @@ public class LapPhieuKiemKePanel extends JPanel {
     private JTextField txtNgayTao;
     private JComboBox cbSanPham;
     private List<ChiTietKiemKe> listCTKK;
+    private PhieuKiemKe phieuKiemKe;
+    private NguoiDung nguoiDung;
 
-    public LapPhieuKiemKePanel() {
+    public LapPhieuKiemKePanel(NguoiDung nguoiDung) {
+        this.nguoiDung = nguoiDung;
+        phieuKiemKe = new PhieuKiemKe();
+        phieuKiemKe.setIdNguoiDung(nguoiDung.getIdNguoiDung());
         setLayout(new BorderLayout());
         listCTKK = new ArrayList<>();
         initUI();
@@ -53,6 +64,7 @@ public class LapPhieuKiemKePanel extends JPanel {
 
         btnThemSanPham = new JButton("Thêm sản phẩm");
         btnLuuPhieu = new JButton("Lưu phiếu kiểm kê");
+        
         cbSanPham = new JComboBox<>();
         topPanel.add(lblNgayTao);
         topPanel.add(txtNgayTao);
@@ -67,6 +79,42 @@ public class LapPhieuKiemKePanel extends JPanel {
 
         add(new JScrollPane(myTable), BorderLayout.CENTER);
         btnThemSanPham.addActionListener(this::themSanPhamVaoBang);
+        btnLuuPhieu.addActionListener(this::taoPhieu);
+
+    }
+
+    private void taoPhieu(ActionEvent e) {
+        // Xử lý lưu vào DB sẽ làm ở DAO
+        int rowCount = myTable.getRowCount();
+        if (rowCount == 0) {
+            JOptionPane.showMessageDialog(this, "Chưa có sản phẩm nào trong phiếu.");
+            return;
+        }
+
+        try {
+            PhieuKiemKeDAO.TaoPhieuKiemKe(phieuKiemKe, listCTKK);
+            JOptionPane.showMessageDialog(this, "Phiếu đã được tạo! Đã cập nhật lại theo số lượng thực tế!");
+            // Hoặc xóa bảng nếu muốn tiếp tục tạo
+            resetForm();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LapPhieuKiemKePanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LapPhieuKiemKePanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(LapPhieuKiemKePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void resetForm() throws Exception {
+        // Reset lại danh sách kiểm kê
+        listCTKK.clear();
+
+        // giữ nguyên người dùng
+        txtNgayTao.setText(java.time.LocalDate.now().toString());
+
+        // Reset lại table
+        HienThiCTKK();
 
     }
 
@@ -90,9 +138,22 @@ public class LapPhieuKiemKePanel extends JPanel {
                 return;
             }
         }
+
+        //Lấy thông tin số lượng tồn kho
+        ChiTietTonKho cttk = new ChiTietTonKho();
+        cttk.setIdKhoHang(nguoiDung.getIdKhoHang());
+        cttk.setIdSanPham(sp.getIdSanPham());
+        try {
+            cttk = ChiTietTonKhoDAO.LayThongTinTonKho(cttk);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LapPhieuKiemKePanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LapPhieuKiemKePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         ChiTietKiemKe ctkk = new ChiTietKiemKe();
         ctkk.setIdSanPham(sp.getIdSanPham());
-        ctkk.setSoLuongHeThong(10); // 
+        ctkk.setSoLuongHeThong(cttk.getSoLuong()); // 
         listCTKK.add(ctkk);
         try {
             HienThiCTKK();
@@ -139,6 +200,8 @@ public class LapPhieuKiemKePanel extends JPanel {
         myTable.setTableData(data);
 
     }
+    
+    
 
     public static void main(String[] args) {
         try {
@@ -147,11 +210,11 @@ public class LapPhieuKiemKePanel extends JPanel {
             System.err.println("Không thể cài đặt FlatLaf");
         }
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Quản Lý Gói Hàng");
+            JFrame frame = new JFrame("Lập phiếu kiểm kê");
             NguoiDung nd = new NguoiDung();
             nd.setIdNguoiDung(3);
             try {
-                frame.setContentPane(new LapPhieuKiemKePanel());
+                frame.setContentPane(new LapPhieuKiemKePanel(NguoiDungDAO.LayThongTinNguoiDung(nd)));
             } catch (Exception ex) {
                 Logger.getLogger(QuanLyNhapXuatPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
